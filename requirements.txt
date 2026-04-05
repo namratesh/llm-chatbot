@@ -4,3 +4,5 @@ langgraph
 langchain-openai
 langchain-ollama
 pydantic-settings
+streamlit
+requests
