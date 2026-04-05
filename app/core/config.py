@@ -12,6 +12,9 @@ class Settings(BaseSettings):
     # OpenAI / OpenRouter Settings
     OPENAI_API_KEY: str | None = None
     OPENROUTER_API_KEY: str | None = None
+
+    #FASTAPI ENDPOINT
+    FASTAPI_ENDPOINT: str = "http://localhost:8000/v1/chat/stream"
     
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
