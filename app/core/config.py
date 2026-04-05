@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     OPENROUTER_API_KEY: str | None = None
 
     #FASTAPI ENDPOINT
-    FASTAPI_ENDPOINT: str = "http://localhost:8000/v1/chat"
+    FASTAPI_ENDPOINT: str = "http://localhost:8000/v1/chat/stream"
     
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

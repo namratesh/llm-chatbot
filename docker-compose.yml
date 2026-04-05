@@ -20,7 +20,7 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - FASTAPI_ENDPOINT=http://api:8000/v1/chat
+      - FASTAPI_ENDPOINT=http://api:8000/v1/chat/stream
     depends_on:
       - api
     networks:

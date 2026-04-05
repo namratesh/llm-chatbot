@@ -21,26 +21,28 @@ for message in st.session_state.messages:
 
 # 3. Chat Input
 if prompt := st.chat_input("What's on your mind?"):
-    # Add user message to UI
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # 4. Call FastAPI Backend
     with st.chat_message("assistant"):
-        with st.spinner("Thinking..."):
+        # 1. Define a generator to consume the FastAPI stream
+        def get_backend_stream():
             try:
                 response = requests.post(
                     settings.FASTAPI_ENDPOINT,
                     json={"message": prompt},
-                    timeout=60
+                    stream=True  
                 )
-                if response.status_code == 200:
-                    ai_response = response.json().get("response")
-                    st.markdown(ai_response)
-                    # Save AI response
-                    st.session_state.messages.append({"role": "assistant", "content": ai_response})
-                else:
-                    st.error(f"Error: {response.status_code}")
-            except Exception as e:
-                st.error(f"Connection failed: {e}")
+                for chunk in response.iter_content(chunk_size=None, decode_unicode=True):
+                    if chunk:
+                        yield chunk
+            except requests.exceptions.RequestException as e:
+                st.error(f"⚠️ Connection error: {e}")
+                yield f"Oops! I had trouble connecting to my brain. Error: {str(e)}"
+
+        # 2. Use Streamlit's native streaming UI component
+        full_response = st.write_stream(get_backend_stream())
+        
+        # 3. Save the final string to session state
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
