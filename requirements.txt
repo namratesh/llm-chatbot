@@ -6,3 +6,5 @@ langchain-ollama
 pydantic-settings
 streamlit
 requests
+langgraph-checkpoint-sqlite
+aiosqlite
